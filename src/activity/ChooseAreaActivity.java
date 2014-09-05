@@ -68,7 +68,8 @@ public class ChooseAreaActivity extends Activity {
 	private int currentLevel;
 	private boolean isFromWeatherActivity;
 	
-	@SuppressLint("InlinedApi") @Override
+	@SuppressLint("InlinedApi")
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
