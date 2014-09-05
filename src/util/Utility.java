@@ -14,7 +14,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.widget.EditText;
 import db.MyWeatherDB;
 
 public class Utility {

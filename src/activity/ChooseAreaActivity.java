@@ -2,20 +2,22 @@ package activity;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import util.HttpCallbackListener;
-import util.HttpUtil;
-import util.Utility;
 import model.City;
 import model.County;
 import model.Province;
-import android.R.integer;
+import util.HttpCallbackListener;
+import util.HttpUtil;
+import util.Utility;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -25,9 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.myweather.app.R;
-
 import db.MyWeatherDB;
 
 public class ChooseAreaActivity extends Activity {
@@ -63,16 +63,12 @@ public class ChooseAreaActivity extends Activity {
 	 */
 	private City selectedCity;
 	/**
-	 * selected county
-	 */
-	private County selectedCounty;
-	/**
 	 * selected level
 	 */
 	private int currentLevel;
 	private boolean isFromWeatherActivity;
 	
-	@Override
+	@SuppressLint("InlinedApi") @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
@@ -86,11 +82,29 @@ public class ChooseAreaActivity extends Activity {
 		}
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.choose_area);
+		final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_container);
+		swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+			
+			@Override
+			public void onRefresh() {
+				// TODO Auto-generated method stub
+				new Handler().postDelayed(new Runnable() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						swipeRefreshLayout.setRefreshing(false);
+					}
+				}, 5000);
+			}
+		});
+		swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright, 
+				android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
 		listView = (ListView) findViewById(R.id.list_view);
 		titleText = (TextView) findViewById(R.id.title_text);
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataList);
 		listView.setAdapter(adapter);
-		myWeatherDB = myWeatherDB.getInstance(this);
+		myWeatherDB = MyWeatherDB.getInstance(this);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
